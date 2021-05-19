@@ -106,6 +106,6 @@ def get_book_content(book_id):
     query = (
         'SELECT content, ext '
         'FROM book_content '
-        'WHERE bookid=?'
+        'WHERE id=?'
     )
     return DATABASE_CONNECTION.conn.execute(query, (book_id, )).fetchone()
