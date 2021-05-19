@@ -66,3 +66,42 @@ def create_account(username, password) -> bool:
         print(e)
         return False
     return True
+
+
+def look_up_books(book_id=None, book_name=None, book_type=None, author=None):
+    query = (
+        'SELECT * '
+        'FROM book '
+        'WHERE 1'
+    )
+    args = []
+    if book_id is not None:
+        query += ' AND book_id=?'
+        args.append(book_id)
+    if book_name is not None:
+        query += ' AND book_name=?'
+        args.append(book_name)
+    if book_type is not None:
+        query += ' AND book_type=?'
+        args.append(book_type)
+    if author is not None:
+        query += ' AND author=?'
+        args.append(author)
+
+    return DATABASE_CONNECTION.conn.execute(query, args).fetchall()
+
+
+def get_book_content(book_id):
+    """
+        Get content of a book
+        Return a tuple (data, ext) with `data` is the
+        binary data of the book. `ext` is extention
+        of the file.
+        Return None if book_id doesn't exist
+    """
+    query = (
+        'SELECT content, ext '
+        'FROM book_content '
+        'WHERE bookid=?'
+    )
+    return DATABASE_CONNECTION.conn.execute(query, (book_id, )).fetchone()
