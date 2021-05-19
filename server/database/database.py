@@ -69,6 +69,10 @@ def create_account(username, password) -> bool:
 
 
 def look_up_books(book_id=None, book_name=None, book_type=None, author=None):
+    """
+        Get a list of books that match the given params
+        Return a list of tuple (book_id, book_name, book_type, author, year)
+    """
     query = (
         'SELECT * '
         'FROM book '
