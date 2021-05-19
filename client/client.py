@@ -1,5 +1,4 @@
 import socket
-import time
 
 
 def connect_server(server_address):

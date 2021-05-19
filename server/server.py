@@ -1,6 +1,5 @@
 import socket
 import threading
-import time
 
 
 CLIENT_CONNECTION_MAX = 2
