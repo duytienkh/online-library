@@ -15,7 +15,7 @@ class Database():
         )
 
         self.conn.execute(
-            'CREATE TABLE IF NOT EXISTS book_info ('
+            'CREATE TABLE IF NOT EXISTS book ('
             'book_id        INTEGER PRIMARY KEY,'
             'book_name      TEXT,'
             'book_type      TEXT,'
@@ -28,7 +28,8 @@ class Database():
             'CREATE TABLE IF NOT EXISTS book_content ('
             'id           INTEGER PRIMARY KEY,'
             'content      BLOB,'  # binary datatype
-            'ext          TEXT'
+            'ext          TEXT,'
+            'FOREIGN KEY (id) REFERENCES book(book_id)'
             ')'
         )
 
