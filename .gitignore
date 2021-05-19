@@ -1,1 +1,4 @@
 .vscode
+server/database/create_sample.py
+*.txt
+__pycache__/
