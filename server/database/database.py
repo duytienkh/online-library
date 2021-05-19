@@ -53,3 +53,16 @@ def check_user_password(username, password) -> bool:
         'WHERE username = ? AND password = ?'
     )
     return DATABASE_CONNECTION.conn.execute(query, (username, password)).fetchone() is not None
+
+
+def create_account(username, password) -> bool:
+    query = (
+        'INSERT INTO account (username, password)'
+        'VALUES (?, ?)'
+    )
+    try:
+        DATABASE_CONNECTION.conn.execute(query, (username, password))
+    except Exception as e:
+        print(e)
+        return False
+    return True
