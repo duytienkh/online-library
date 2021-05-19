@@ -43,7 +43,7 @@ def check_user_exists(username) -> bool:
         'FROM account '
         'WHERE username = ?'
     )
-    return DATABASE_CONNECTION.conn.execute(query, (username, )) is not None
+    return DATABASE_CONNECTION.conn.execute(query, (username, )).fetchone() is not None
 
 
 def check_user_password(username, password) -> bool:
@@ -52,4 +52,4 @@ def check_user_password(username, password) -> bool:
         'FROM account '
         'WHERE username = ? AND password = ?'
     )
-    return DATABASE_CONNECTION.conn.execute(query, (username, password)) is not None
+    return DATABASE_CONNECTION.conn.execute(query, (username, password)).fetchone() is not None
