@@ -19,7 +19,7 @@ class Database():
             'book_id        INTEGER PRIMARY KEY,'
             'book_name      TEXT,'
             'book_type      TEXT,'
-            'author_name    TEXT,'
+            'author         TEXT,'
             'year           INTEGER'
             ')'
         )
