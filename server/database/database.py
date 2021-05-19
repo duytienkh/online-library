@@ -83,14 +83,14 @@ def look_up_books(book_id=None, book_name=None, book_type=None, author=None):
         query += ' AND book_id=?'
         args.append(book_id)
     if book_name is not None:
-        query += ' AND book_name=?'
-        args.append(book_name)
+        query += ' AND book_name LIKE ?'
+        args.append('%' + book_name + '%')
     if book_type is not None:
         query += ' AND book_type=?'
         args.append(book_type)
     if author is not None:
-        query += ' AND author=?'
-        args.append(author)
+        query += ' AND author LIKE ?'
+        args.append('%' + author + '%')
 
     return DATABASE_CONNECTION.conn.execute(query, args).fetchall()
 
