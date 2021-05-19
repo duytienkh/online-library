@@ -34,3 +34,21 @@ class Database():
 
 
 DATABASE_CONNECTION = Database('database/books.db')
+
+
+def check_user_exists(username) -> bool:
+    query = (
+        'SELECT password '
+        'FROM account '
+        'WHERE username = ?'
+    )
+    return DATABASE_CONNECTION.conn.execute(query, (username, )) is not None
+
+
+def check_user_password(username, password) -> bool:
+    query = (
+        'SELECT 1 '
+        'FROM account '
+        'WHERE username = ? AND password = ?'
+    )
+    return DATABASE_CONNECTION.conn.execute(query, (username, password)) is not None
