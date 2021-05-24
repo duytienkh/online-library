@@ -44,6 +44,6 @@ def sign_up(u, p):
     package = {
         "type": "sign_up",
         "username": u.get(),
-        "password": p.get
+        "password": p.get()
     }
     commute.send(package)
