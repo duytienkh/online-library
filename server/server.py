@@ -1,3 +1,4 @@
+import json
 import socket
 import threading
 
@@ -14,9 +15,16 @@ def create_connection(conn, addr):
         return
     print("Connected by", addr, "Current client count:", CLIENT_CONNECTION_COUNT)
     try:
-        pass
-    except Exception:
-        pass
+        while True:
+            try:
+                req_size = conn.recv(128)
+                req_size = json.loads(req_size.decode())
+                print(req_size)
+                req = conn.recv(req_size["size"])
+                req = json.loads(req.decode())
+                print(req)
+            except Exception:
+                break
     finally:
         print("Disconnected by", addr)
         conn.close()
