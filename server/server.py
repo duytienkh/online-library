@@ -1,6 +1,9 @@
 import socket
 import threading
 
+import modules.commute as commute
+import modules.execute as execute
+
 
 CLIENT_CONNECTION_MAX = 2
 CLIENT_CONNECTION_COUNT = 0
@@ -12,11 +15,17 @@ def create_connection(conn, addr):
         CLIENT_CONNECTION_COUNT += 1
     else:
         return
-    print("Connected by", addr, "Current client count:", CLIENT_CONNECTION_COUNT)
+    print("Connected by", addr, "Current count:", CLIENT_CONNECTION_COUNT)
     try:
-        pass
-    except Exception:
-        pass
+        while True:
+            try:
+                req = commute.recv(conn)
+                if req:
+                    print(req)
+                    execute.execute(conn, req)
+            except Exception as e:
+                print(e)
+                break
     finally:
         print("Disconnected by", addr)
         conn.close()
