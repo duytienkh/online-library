@@ -1,10 +1,11 @@
 import json
 import socket
+import sys
 
 conn = None
 
 
-def connect(addr, port):
+def connect(addr, port=55555):
     global conn
     try:
         sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,7 +17,9 @@ def connect(addr, port):
 
 
 def send(package):
-    req_size = {"size": package.size()}
+    print(package)
+    package = json.dumps(package).encode()
+    req_size = {"size": sys.getsizeof(package)}
     print(req_size)
     req_size = json.dumps(req_size).encode()
     conn.sendall(req_size)  # send req size
