@@ -28,28 +28,12 @@ def lib_gui():
     book_list.pack()
     # book info
     info_frame = tk.Frame(gui)
-    b_id = tk.Label(info_frame)
-    b_name = tk.Label(info_frame)
-    b_type = tk.Label(info_frame)
-    b_author = tk.Label(info_frame)
-    b_id.pack()
-    b_name.pack()
-    b_type.pack()
-    b_author.pack()
-    btn_frame = tk.Frame(info_frame)
-    btn_frame.pack()
-    read_btn = tk.Button(btn_frame, text="Read")
-    dl_btn = tk.Button(btn_frame, text="Download")
-    read_btn.pack(side=tk.LEFT, padx=10)
-    dl_btn.pack(side=tk.LEFT, padx=10)
     info_frame.pack()
 
     def item_selected(event):
         for selected_item in book_list.selection():
             item = book_list.item(selected_item)
             record = item['values']
-            read_btn.config(command=lambda: reader.read(record[0]))
-            dl_btn.config(command=lambda: reader.donwload(record[0]))
             show_book_info(info_frame, record)
 
     book_list.bind('<<TreeviewSelect>>', item_selected)
@@ -76,8 +60,21 @@ def find(list, content, option):
 
 
 def show_book_info(f, record):
-    e = f.winfo_children()
-    e[0]["text"] = f"ID: {record[0]}"
-    e[1]["text"] = f"Name: {record[1]}"
-    e[2]["text"] = f"Type: {record[2]}"
-    e[3]["text"] = f"Author: {record[3]}"
+    for e in f.winfo_children():
+        e.destroy()
+    b_id = tk.Label(f, text=f"ID: {record[0]}")
+    b_name = tk.Label(f, text=f"Name: {record[1]}")
+    b_type = tk.Label(f, text=f"Type: {record[2]}")
+    b_author = tk.Label(f, text=f"Author: {record[3]}")
+    b_id.pack()
+    b_name.pack()
+    b_type.pack()
+    b_author.pack()
+    btn_frame = tk.Frame(f)
+    btn_frame.pack()
+    read_btn = tk.Button(btn_frame, text="Read")
+    dl_btn = tk.Button(btn_frame, text="Download")
+    read_btn.pack(side=tk.LEFT, padx=10)
+    dl_btn.pack(side=tk.LEFT, padx=10)
+    read_btn.config(command=lambda: reader.read(record[0]))
+    dl_btn.config(command=lambda: reader.donwload(record[0]))
