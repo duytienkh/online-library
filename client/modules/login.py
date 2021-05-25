@@ -1,10 +1,12 @@
 import tkinter as tk
 
 import modules.commute as commute
+import modules.lib as lib
 
 
 def login_gui():
-    gui = tk.Tk(className="login")
+    gui = tk.Tk()
+    gui.title("Login")
     # username frame
     u_frame = tk.Frame(gui)
     u_label = tk.Label(u_frame, text="username:")
@@ -26,24 +28,29 @@ def login_gui():
     sup_btn.config(command=lambda: sign_up(u, p))
     sin_btn = tk.Button(btn_frame, text="sign in")
     sin_btn.pack(side=tk.RIGHT, padx=10)
-    sin_btn.config(command=lambda: sign_in(u, p))
+    sin_btn.config(command=lambda: sign_in(gui, u, p))
     btn_frame.pack()
     gui.mainloop()
 
 
-def sign_in(u, p):
-    package = {
+def sign_in(gui, u, p):
+    req = {
         "type": "sign_in",
         "username": u.get(),
         "password": p.get()
     }
-    commute.send(package)
+    # commute.send(req)
+    # res = commute.recv()
+
+    gui.destroy()
+    lib.lib_gui()
 
 
 def sign_up(u, p):
-    package = {
+    req = {
         "type": "sign_up",
         "username": u.get(),
         "password": p.get()
     }
-    commute.send(package)
+    # commute.send(req)
+    # res = commute.recv()
