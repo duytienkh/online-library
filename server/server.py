@@ -1,4 +1,3 @@
-import json
 import socket
 import threading
 
@@ -16,7 +15,7 @@ def create_connection(conn, addr):
         CLIENT_CONNECTION_COUNT += 1
     else:
         return
-    print("Connected by", addr, "Current client count:", CLIENT_CONNECTION_COUNT)
+    print("Connected by", addr, "Current count:", CLIENT_CONNECTION_COUNT)
     try:
         while True:
             try:

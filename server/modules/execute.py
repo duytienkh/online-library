@@ -9,7 +9,7 @@ def execute(conn, req):
         "data": ""
     }
     if req_type == "sign_up":
-        if db.check_user_exists(req["username"]) == True:
+        if db.check_user_exists(req["username"]) is True:
             res["status"] = False
             res["data"] = "username already existed"
         else:
