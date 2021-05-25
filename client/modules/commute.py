@@ -29,14 +29,12 @@ def connect(addr, port=55555):
 def send(package):
     if not conn:
         create_connection()
-    print(package)
-    package = json.dumps(package).encode()
-    req_size = {"size": sys.getsizeof(package)}
+    req = json.dumps(package).encode()
+    req_size = {"size": sys.getsizeof(req)}
     print(req_size)
     req_size = json.dumps(req_size).encode()
     conn.sendall(req_size)  # send req size
     print(package)
-    req = json.dumps(package).encode()
     conn.sendall(req)  # send req
 
 
