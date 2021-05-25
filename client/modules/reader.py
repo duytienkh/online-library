@@ -9,8 +9,8 @@ def get_book_content(id):
         "id": id
     }
 
-    #  commute.send(req)
-    #  res = commute.recv()
+    commute.send(req)
+    res = commute.recv()
 
     return res
 
@@ -27,5 +27,5 @@ def read(id):
 
 def donwload(id):
     book_content = get_book_content(id)
-    # choose path
-    # save
+
+    return book_content

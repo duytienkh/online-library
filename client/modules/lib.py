@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Text, ttk
+from tkinter import ttk
 
 import modules.commute as commute
 import modules.reader as reader
@@ -20,7 +20,7 @@ def lib_gui():
     f_btn.pack(side=tk.LEFT)
     f_frame.pack()
     # result frame
-    book_list = ttk.Treeview(gui, columns=(1, 2, 3, 4), show="headings", height=8)
+    book_list = ttk.Treeview(gui, columns=(1, 2, 3, 4), show="headings")
     book_list.heading(1, text='ID')
     book_list.heading(2, text='Name')
     book_list.heading(3, text='Type')
@@ -38,25 +38,23 @@ def lib_gui():
 
     book_list.bind('<<TreeviewSelect>>', item_selected)
 
-    for i in range(0, 20):  # for dev
-        book_list.insert('', tk.END, values=(f"CS{i}", f"Name{i}", "CS", f"Author{i}"))
-
-    f_btn.config(command=lambda: find(book_list, f_content, f_options))
+    f_btn.config(command=lambda: find(book_list, f_content, options))
     gui.mainloop()
 
 
-def find(list, content, option):
+def find(book_list, content, option):
     req = {
         "type": "find",
         "content": content.get(),
-        "option": option
+        "option": option.get()
     }
+    book_list.delete(*book_list.get_children())
+    commute.send(req)
+    list = commute.recv()
 
-    # commute.send(req)
-    # res = commute.recv()
-
-    # update list
-    list.delete(*list.get_children())
+    for book in list:
+        values = (book["id"], book["name"], book["type"], book["author"])
+        book_list.insert("", tk.END, values=values)
 
 
 def show_book_info(f, record):
