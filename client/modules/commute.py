@@ -1,6 +1,5 @@
 import json
 import socket
-import sys
 import xml.dom.minidom as minidom
 
 conn = None
@@ -26,23 +25,46 @@ def connect(addr, port=55555):
         return
 
 
+def disconnect():
+    global conn
+    conn.close()
+    conn = None
+
+
 def send(package):
+    global conn
     if not conn:
         create_connection()
     req = json.dumps(package).encode()
-    req_size = {"size": sys.getsizeof(req)}
+    req_size = {"size": len(req)}
     print(req_size)
     req_size = json.dumps(req_size).encode()
+    while len(req_size) < 128:
+        req_size += b" "
+    print(len(req_size))
     conn.sendall(req_size)  # send req size
     print(package)
     conn.sendall(req)  # send req
 
 
 def recv():
-    res_size = conn.recv(128)  # recv res size
-    res_size = json.loads(res_size.decode())
+    global conn
+    res_size_b = conn.recv(128)  # recv res size
+    res_size = None
+    try:
+        res_size = json.loads(res_size_b.decode())
+    except Exception as e:
+        print(e)
+        print(res_size_b.decode())
+        return
     print(res_size)
-    res = conn.recv(res_size["size"])  # recv res
-    res = json.loads(res.decode())
-    print(res)
-    return res
+    resp_b = conn.recv(res_size["size"])  # recv res
+    resp = None
+    try:
+        resp = json.loads(resp_b.decode())
+    except Exception as e:
+        print(e)
+        print(resp_b.decode())
+        return
+    print(resp)
+    return resp

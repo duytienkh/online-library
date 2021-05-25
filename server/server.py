@@ -2,6 +2,9 @@ import json
 import socket
 import threading
 
+import modules.commute as commute
+import modules.execute as execute
+
 
 CLIENT_CONNECTION_MAX = 2
 CLIENT_CONNECTION_COUNT = 0
@@ -17,13 +20,12 @@ def create_connection(conn, addr):
     try:
         while True:
             try:
-                req_size = conn.recv(128)
-                req_size = json.loads(req_size.decode())
-                print(req_size)
-                req = conn.recv(req_size["size"])
-                req = json.loads(req.decode())
-                print(req)
-            except Exception:
+                req = commute.recv(conn)
+                if req:
+                    print(req)
+                    execute.execute(conn, req)
+            except Exception as e:
+                print(e)
                 break
     finally:
         print("Disconnected by", addr)
