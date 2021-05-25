@@ -2,8 +2,8 @@ import tkinter as tk
 from tkinter import messagebox
 
 import modules.commute as commute
-import modules.lib as lib
 import modules.config as config
+import modules.lib as lib
 
 
 def login_gui():
