@@ -62,6 +62,7 @@ def create_account(username, password) -> bool:
     )
     try:
         DATABASE_CONNECTION.conn.execute(query, (username, password))
+        DATABASE_CONNECTION.conn.commit()
     except Exception as e:
         print(e)
         return False
