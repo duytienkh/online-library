@@ -40,11 +40,6 @@ def lib_gui():
 
     f_btn.config(command=lambda: find(book_list, f_content, options))
 
-    def on_closing():
-        commute.disconnect()
-        gui.destroy()
-
-    gui.protocol("WM_DELETE_WINDOW", on_closing)
     gui.mainloop()
 
 

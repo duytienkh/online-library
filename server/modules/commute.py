@@ -16,8 +16,9 @@ def send(conn, package):
 
 def recv(conn):
     res_size_b = conn.recv(128)  # recv res size
+    print(res_size_b)
     if len(res_size_b) == 0:
-        return None
+        raise ConnectionError
     print(f"Received {len(res_size_b)} bytes")
     res_size = None
     try:

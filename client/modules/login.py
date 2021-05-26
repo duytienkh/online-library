@@ -37,6 +37,12 @@ def login_gui():
     sin_btn.pack(side=tk.RIGHT, padx=10)
     sin_btn.config(command=lambda: sign_in(gui, u, p))
     btn_frame.pack(pady=30)
+
+    def on_closing():
+        commute.disconnect()
+        gui.destroy()
+
+    gui.protocol("WM_DELETE_WINDOW", on_closing)
     gui.mainloop()
 
 
