@@ -9,12 +9,18 @@ def set_log(value):
     log = value
 
 
+def log_push(msg):
+    log["state"] = tk.NORMAL
+    log.insert("0.0", "\n" + msg)
+    log["state"] = tk.DISABLED
+
+
 def log_update(f):
     global log
 
     def wrapper(*args, **kw):
         package = f(*args, **kw)
-        log.insert(tk.INSERT, package["log"] + "\n")
+        log_push(package["log"])
         return package
 
     return wrapper
@@ -26,11 +32,10 @@ def send(conn, package):
     req_size = {"size": len(req)}
     print(req_size)
     req_size = json.dumps(req_size).encode()
-    while len(req_size) < 128:
-        req_size += b" "
-    print(len(req_size))
+    if len(req_size) < 128:
+        req_size += b" " * (128 - len(req_size))
+
     conn.sendall(req_size)  # send req size
-    print(package)
     conn.sendall(req)  # send req
     return package
 
@@ -38,26 +43,24 @@ def send(conn, package):
 @log_update
 def recv(conn):
     res_size_b = conn.recv(128)  # recv res size
-    print(res_size_b)
+
     if len(res_size_b) == 0:
         raise ConnectionError
-    print(f"Received {len(res_size_b)} bytes")
     res_size = None
     try:
         res_size = json.loads(res_size_b.decode())
     except Exception as e:
-        print(e)
-        print(res_size_b)
-        return
-    print(res_size)
+        print("Error:", e)
+        print("Detail:", res_size_b)
+        raise RuntimeError
+
     resp_b = conn.recv(res_size["size"])  # recv res
     resp = None
     try:
         resp = json.loads(resp_b.decode())
     except Exception as e:
-        print(e)
-        print(f"Received {len(resp_b)} bytes")
-        print(resp_b.decode())
-        return
-    print(resp)
+        print("Error:", e)
+        print("Detail:", resp_b.decode())
+        raise RuntimeError
+
     return resp

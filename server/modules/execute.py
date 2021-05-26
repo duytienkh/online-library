@@ -14,19 +14,24 @@ def execute(conn, req):
     req_type = req["type"]
     res = {
         "status": "",
-        "data": ""
+        "data": "",
+        "log": ""
     }
     if req_type == "sign_up":
         if db.check_user_exists(req["username"]) is True:
             res["status"] = False
             res["data"] = "username already existed"
+            res["log"] = "username was existed"
         else:
             res["status"] = db.create_account(req["username"], req["password"])
             res["data"] = "create unsuccessfully"
+            res["log"] = "create unsuccessfully"
             if res["status"]:
                 res["data"] = "create successfully"
+                res["log"] = "account created"
     if req_type == "sign_in":
         res["status"] = db.check_user_password(req["username"], req["password"])
+        res["log"] = "logged in"
     if req_type == "find":
         content = req["content"]
         option = TO_KWARGS.get(req["option"])
@@ -37,4 +42,5 @@ def execute(conn, req):
             if len(content) == 0:
                 kwargs = {}
             res = db.look_up_books(**kwargs)
+        # res["log"] = "books result was sent" 
     commute.send(conn, res)

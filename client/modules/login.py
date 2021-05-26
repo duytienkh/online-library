@@ -59,7 +59,8 @@ def sign_in(gui, u, p):
     req = {
         "type": "sign_in",
         "username": u.get(),
-        "password": p.get()
+        "password": p.get(),
+        "log": "sign in"
     }
     commute.send(req)
     resp = commute.recv()
@@ -77,7 +78,8 @@ def sign_up(u, p):
     req = {
         "type": "sign_up",
         "username": u.get(),
-        "password": p.get()
+        "password": p.get(),
+        "log": "sign up"
     }
     commute.send(req)
     resp = commute.recv()

@@ -6,7 +6,8 @@ import modules.commute as commute
 def get_book_content(id):
     req = {
         "type": "book_content",
-        "id": id
+        "id": id,
+        "log": "get book content"
     }
 
     commute.send(req)
