@@ -10,7 +10,11 @@ def create_connection():
         doc = minidom.parse("config.xml")
         addr = doc.getElementsByTagName("address")[0].attributes["value"].value
         port = doc.getElementsByTagName("port")[0].attributes["value"].value
-        connect(addr, int(port))
+        s = connect(addr, int(port))
+        if s:
+            print("Connect successfully")
+        else:
+            print("Cant connect to server")
 
 
 def connect(addr, port=55555):
@@ -20,13 +24,17 @@ def connect(addr, port=55555):
         sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sk.connect((addr, port))
         conn = sk
-    except ConnectionRefusedError:
-        print("show error msg")
-        return
+    except Exception as e:
+        print(e)
+        return False
+    return True
 
 
 def disconnect():
     global conn
+    if not conn:
+        return
+    print("Disconnected")
     conn.close()
     conn = None
 
