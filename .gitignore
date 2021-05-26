@@ -3,3 +3,5 @@ server/database/create_sample.py
 *.txt
 __pycache__/
 *.xml
+venv/
+*.code-workspace
