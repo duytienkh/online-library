@@ -6,7 +6,7 @@ import xml.etree.ElementTree as et
 
 def show(login_gui):
     login_gui.withdraw()
-    gui = tk.Tk()
+    gui = tk.Toplevel(login_gui)
     gui.title("Server config")
     f = tk.Frame(gui)
     addr = tk.Entry(f)
