@@ -1,5 +1,13 @@
 import modules.commute as commute
 
+TO_KWARGS = {
+    "ID": "book_id",
+    "Name": "book_name",
+    "Type": "book_type",
+    "Author": "author",
+    "Year": "year"
+}
+
 
 def execute(conn, req):
     import database.database as db
@@ -19,4 +27,14 @@ def execute(conn, req):
                 res["data"] = "create successfully"
     if req_type == "sign_in":
         res["status"] = db.check_user_password(req["username"], req["password"])
+    if req_type == "find":
+        content = req["content"]
+        option = TO_KWARGS.get(req["option"])
+        if option is None:
+            res = []
+        else:
+            kwargs = {option: content}
+            if len(content) == 0:
+                kwargs = {}
+            res = db.look_up_books(**kwargs)
     commute.send(conn, res)
