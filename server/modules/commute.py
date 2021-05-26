@@ -1,6 +1,26 @@
 import json
+import tkinter as tk
+
+log = None
 
 
+def set_log(value):
+    global log
+    log = value
+
+
+def log_update(f):
+    global log
+
+    def wrapper(*args, **kw):
+        package = f(*args, **kw)
+        log.insert(tk.INSERT, package["log"] + "\n")
+        return package
+
+    return wrapper
+
+
+@log_update
 def send(conn, package):
     req = json.dumps(package).encode()
     req_size = {"size": len(req)}
@@ -12,8 +32,10 @@ def send(conn, package):
     conn.sendall(req_size)  # send req size
     print(package)
     conn.sendall(req)  # send req
+    return package
 
 
+@log_update
 def recv(conn):
     res_size_b = conn.recv(128)  # recv res size
     print(res_size_b)
