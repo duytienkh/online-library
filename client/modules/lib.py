@@ -21,11 +21,11 @@ def lib_gui():
     f_frame.pack()
     # result frame
     book_list = ttk.Treeview(gui, columns=(1, 2, 3, 4, 5), show="headings")
-    book_list.heading(1, text='ID')
-    book_list.heading(2, text='Name')
-    book_list.heading(3, text='Type')
-    book_list.heading(4, text='Author')
-    book_list.heading(5, text='Year')
+    config_colum = [('ID', 10), ('Name', 250), ('Type', 90), ('Author', 110), ('Year', 50)]
+    for num, col in enumerate(config_colum):
+        name, width = col
+        book_list.heading(num + 1, text=name)
+        book_list.column(num + 1, width=width)
     book_list.pack()
     # book info
     info_frame = tk.Frame(gui)
