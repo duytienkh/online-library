@@ -20,11 +20,12 @@ def lib_gui():
     f_btn.pack(side=tk.LEFT)
     f_frame.pack()
     # result frame
-    book_list = ttk.Treeview(gui, columns=(1, 2, 3, 4), show="headings")
+    book_list = ttk.Treeview(gui, columns=(1, 2, 3, 4, 5), show="headings")
     book_list.heading(1, text='ID')
     book_list.heading(2, text='Name')
     book_list.heading(3, text='Type')
-    book_list.heading(4, text="Author")
+    book_list.heading(4, text='Author')
+    book_list.heading(5, text='Year')
     book_list.pack()
     # book info
     info_frame = tk.Frame(gui)
@@ -51,11 +52,10 @@ def find(book_list, content, option):
     }
     book_list.delete(*book_list.get_children())
     commute.send(req)
-    list = commute.recv()
+    books = commute.recv()
 
-    for book in list:
-        values = (book["id"], book["name"], book["type"], book["author"])
-        book_list.insert("", tk.END, values=values)
+    for book_info in books:
+        book_list.insert("", tk.END, values=book_info)
 
 
 def show_book_info(f, record):
