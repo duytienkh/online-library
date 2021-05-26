@@ -4,7 +4,8 @@ TO_KWARGS = {
     "ID": "book_id",
     "Name": "book_name",
     "Type": "book_type",
-    "Author": "author"
+    "Author": "author",
+    "Year": "year"
 }
 
 
@@ -32,5 +33,8 @@ def execute(conn, req):
         if option is None:
             res = []
         else:
-            res = db.look_up_books(**{option: content})
+            kwargs = {option: content}
+            if len(content) == 0:
+                kwargs = {}
+            res = db.look_up_books(**kwargs)
     commute.send(conn, res)

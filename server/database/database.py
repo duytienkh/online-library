@@ -69,7 +69,7 @@ def create_account(username, password) -> bool:
     return True
 
 
-def look_up_books(book_id=None, book_name=None, book_type=None, author=None):
+def look_up_books(book_id=None, book_name=None, book_type=None, author=None, year=None):
     """
         Get a list of books that match the given params
         Return a list of tuple (book_id, book_name, book_type, author, year)
@@ -92,6 +92,9 @@ def look_up_books(book_id=None, book_name=None, book_type=None, author=None):
     if author is not None:
         query += ' AND author LIKE ?'
         args.append('%' + author + '%')
+    if year is not None:
+        query += ' AND year=?'
+        args.append(year)
 
     return DATABASE_CONNECTION.conn.execute(query, args).fetchall()
 
