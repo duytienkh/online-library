@@ -3,7 +3,7 @@ import sqlite3
 
 class Database():
     def __init__(self, db_file):
-        self.conn = sqlite3.connect(db_file)
+        self.conn = sqlite3.connect(db_file, check_same_thread=False)
         self.create_tables()
 
     def create_tables(self):
@@ -62,6 +62,7 @@ def create_account(username, password) -> bool:
     )
     try:
         DATABASE_CONNECTION.conn.execute(query, (username, password))
+        DATABASE_CONNECTION.conn.commit()
     except Exception as e:
         print(e)
         return False
