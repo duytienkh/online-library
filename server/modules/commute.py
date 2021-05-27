@@ -4,9 +4,10 @@ import tkinter as tk
 log = None
 
 
-def set_log(value):
-    global log
-    log = value
+def set_log(log_value):
+    global addr, log
+    log = log_value
+    # addr = addr_value
 
 
 def log_push(msg):
@@ -20,7 +21,9 @@ def log_update(f):
 
     def wrapper(*args, **kw):
         package = f(*args, **kw)
-        log_push(package["log"])
+        c_ip = args[0].getpeername()[0]
+        direct = " <-- " if f.__name__ == "send" else " --> "
+        log_push(c_ip + direct + package["log"])
         return package
 
     return wrapper
