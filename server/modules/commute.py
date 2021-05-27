@@ -43,9 +43,19 @@ def send(conn, package):
     return package
 
 
+def safe_recv(conn, size):
+    resp = b''
+    while len(resp) < size:
+        part_resp = conn.recv(size - len(resp))
+        if len(part_resp) == 0:
+            raise ConnectionError
+        resp += part_resp
+    return resp
+
+
 @log_update
 def recv(conn):
-    res_size_b = conn.recv(128)  # recv res size
+    res_size_b = safe_recv(conn, 128)  # recv res size
 
     if len(res_size_b) == 0:
         raise ConnectionError
@@ -57,7 +67,7 @@ def recv(conn):
         print("Detail:", res_size_b)
         raise RuntimeError
 
-    resp_b = conn.recv(res_size["size"])  # recv res
+    resp_b = safe_recv(conn, res_size["size"])  # recv res
     resp = None
     try:
         resp = json.loads(resp_b.decode())
