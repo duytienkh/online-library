@@ -36,11 +36,13 @@ def execute(conn, req):
         content = req["content"]
         option = TO_KWARGS.get(req["option"])
         if option is None:
-            res = []
+            books = []
         else:
             kwargs = {option: content}
             if len(content) == 0:
                 kwargs = {}
-            res = db.look_up_books(**kwargs)
-        # res["log"] = "books result was sent" 
+            books = db.look_up_books(**kwargs)
+        res["status"] = True
+        res["data"] = books
+        res["log"] = f"books result was sent, found {len(books)} result"
     commute.send(conn, res)

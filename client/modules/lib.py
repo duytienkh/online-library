@@ -55,7 +55,7 @@ def find(book_list, content, option):
     commute.send(req)
     books = commute.recv()
 
-    for book_info in books:
+    for book_info in books["data"]:
         book_list.insert("", tk.END, values=book_info)
 
 
