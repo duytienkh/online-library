@@ -1,5 +1,7 @@
 import base64
 import tkinter as tk
+from tkinter import filedialog
+from tkinter import messagebox
 
 import modules.commute as commute
 
@@ -32,6 +34,17 @@ def read(id):
 
 
 def donwload(id):
-    book_content = get_book_content(id)
-
-    return book_content
+    book = get_book_content(id)
+    if book is None:
+        return
+    if book["status"] is False:
+        messagebox.showerror("Error", f"Error while downloading book id={id}: {book['log']}")
+        return
+    ext = book["ext"]
+    fileName = filedialog.asksaveasfilename(defaultextension="." + ext, filetypes=((ext, "." + ext),))
+    if fileName:
+        try:
+            open(fileName, 'wb').write(base64.b64decode(book["data"]))
+            messagebox.showinfo("Downloaded", f"Downloaded successfully to `{fileName}`")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error while saving to `{fileName}`: {e}")
