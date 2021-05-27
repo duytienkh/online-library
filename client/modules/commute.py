@@ -72,7 +72,7 @@ def recv():
         resp = json.loads(resp_b.decode())
     except Exception as e:
         print(e)
-        print(resp_b.decode())
+        print(resp_b.decode()[:200], "...")
         return
-    print(resp)
+    print(resp_b.decode()[:200], "...")
     return resp
