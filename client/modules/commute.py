@@ -1,6 +1,12 @@
 import json
 import socket
 import xml.dom.minidom as minidom
+from tkinter import messagebox
+
+
+class Disconnected(Exception):
+    pass
+
 
 conn = None
 
@@ -15,6 +21,8 @@ def create_connection():
             print("Connect successfully")
         else:
             print("Cant connect to server")
+        return s
+    return True
 
 
 def connect(addr, port=55555):
@@ -42,7 +50,8 @@ def disconnect():
 def send(package):
     global conn
     if not conn:
-        create_connection()
+        if not create_connection():
+            raise Disconnected
     req = json.dumps(package).encode()
     req_size = {"size": len(req)}
     print(req_size)
@@ -72,7 +81,16 @@ def recv():
         resp = json.loads(resp_b.decode())
     except Exception as e:
         print(e)
-        print(resp_b.decode())
+        print(resp_b.decode()[:200], "...")
         return
-    print(resp)
+    print(resp_b.decode()[:200], "...")
     return resp
+
+
+def send_n_recv(package):
+    try:
+        send(package)
+        return recv()
+    except Exception as e:
+        messagebox.showerror("Disconnected", "Cannot connect to server. \n" + str(e))
+    return None

@@ -11,7 +11,8 @@ log = None
 
 
 def create_connection(conn, addr):
-    print("Connected by", addr)
+    print(f"{addr} has connected")
+    commute.log_push(f"+++ {addr} has connected +++")
     try:
         while True:
             try:
@@ -20,11 +21,12 @@ def create_connection(conn, addr):
                     print(req)
                     execute.execute(conn, req)
             except Exception as e:
-                print(e)
+                print("Error:", e)
                 break
     finally:
         conn.close()
-        print("Disconnected by", addr)
+        print(f"{addr} has disconnected")
+        commute.log_push(f"--- {addr} has disconnected ---")
 
 
 def start_server():
@@ -32,6 +34,7 @@ def start_server():
     server.bind(("0.0.0.0", 55555))
     server.listen(CLIENT_CONNECTION_MAX)
     print("Listening...")
+    commute.log_push("=== Server is listening on port 55555 ===")
     while server:
         try:
             conn, addr = server.accept()
@@ -62,11 +65,9 @@ def build():
     l_btn.config(command=lambda: threading.Thread(target=start_server, args=(), daemon=True).start())
     dc_btn = tk.Button(l_f, text="Disconnect all", width=15, height=2, background="white", font=("Consolas", 15))
     dc_btn.pack(side=tk.LEFT, padx=20)
-    port_lb = tk.Label(l_f, text="PORT: ", font=("Consolas", 15))
-    port_lb.pack(side=tk.RIGHT, padx=20)
     l_f.pack(pady=10)
 
-    log = tk.Text(gui)
+    log = tk.Text(gui, font=("Consolas", 10), state=tk.DISABLED)
     commute.set_log(log)
     log.pack(pady=10)
     gui.mainloop()

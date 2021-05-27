@@ -48,14 +48,14 @@ def find(book_list, content, option):
     req = {
         "type": "find",
         "content": content.get(),
-        "option": option.get()
+        "option": option.get(),
+        "log": "find book"
     }
     book_list.delete(*book_list.get_children())
-    commute.send(req)
-    books = commute.recv()
-
-    for book_info in books:
-        book_list.insert("", tk.END, values=book_info)
+    books = commute.send_n_recv(req)
+    if books:
+        for book_info in books["data"]:
+            book_list.insert("", tk.END, values=book_info)
 
 
 def show_book_info(f, record):
