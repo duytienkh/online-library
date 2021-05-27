@@ -64,9 +64,19 @@ def send(package):
     conn.sendall(req)  # send req
 
 
+def safe_recv(conn, size):
+    resp = b''
+    while len(resp) < size:
+        part_resp = conn.recv(size - len(resp))
+        if len(part_resp) == 0:
+            raise ConnectionError
+        resp += part_resp
+    return resp
+
+
 def recv():
     global conn
-    res_size_b = conn.recv(128)  # recv res size
+    res_size_b = safe_recv(conn, 128)  # recv res size
     res_size = None
     try:
         res_size = json.loads(res_size_b.decode())
@@ -75,7 +85,7 @@ def recv():
         print(res_size_b.decode())
         return
     print(res_size)
-    resp_b = conn.recv(res_size["size"])  # recv res
+    resp_b = safe_recv(conn, res_size["size"])  # recv res
     resp = None
     try:
         resp = json.loads(resp_b.decode())
