@@ -1,5 +1,4 @@
 import base64
-
 import tkinter as tk
 
 import modules.commute as commute

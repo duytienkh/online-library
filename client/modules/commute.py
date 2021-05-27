@@ -7,6 +7,7 @@ from tkinter import messagebox
 class Disconnected(Exception):
     pass
 
+
 conn = None
 
 
@@ -84,6 +85,7 @@ def recv():
         return
     print(resp_b.decode()[:200], "...")
     return resp
+
 
 def send_n_recv(package):
     try:
