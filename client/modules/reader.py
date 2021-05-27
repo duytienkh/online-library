@@ -10,10 +10,7 @@ def get_book_content(id):
         "log": "get book content"
     }
 
-    commute.send(req)
-    res = commute.recv()
-
-    return res
+    return commute.send_n_recv(req)
 
 
 def read(id):

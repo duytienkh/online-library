@@ -62,14 +62,13 @@ def sign_in(gui, u, p):
         "password": p.get(),
         "log": "sign in"
     }
-    commute.send(req)
-    resp = commute.recv()
-
-    if resp["status"] is True:
-        gui.destroy()
-        lib.lib_gui()
-    else:
-        messagebox.showerror("", "Username/password was incorrect")
+    resp = commute.send_n_recv(req)
+    if resp:
+        if resp["status"] is True:
+            gui.destroy()
+            lib.lib_gui()
+        else:
+            messagebox.showerror("", "Username/password was incorrect")
 
 
 def sign_up(u, p):
@@ -81,10 +80,9 @@ def sign_up(u, p):
         "password": p.get(),
         "log": "sign up"
     }
-    commute.send(req)
-    resp = commute.recv()
-
-    if resp["status"] is True:
-        messagebox.showinfo("", "Successfully")
-    else:
-        messagebox.showerror("", "Error occurs")
+    resp = commute.send_n_recv(req)
+    if resp:
+        if resp["status"] is True:
+            messagebox.showinfo("", "Successfully")
+        else:
+            messagebox.showerror("", "Error occurs: " + resp["data"])
