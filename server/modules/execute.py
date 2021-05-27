@@ -1,3 +1,5 @@
+import base64
+
 import modules.commute as commute
 
 TO_KWARGS = {
@@ -45,4 +47,14 @@ def execute(conn, req):
         res["status"] = True
         res["data"] = books
         res["log"] = f"books result was sent, found {len(books)} result"
+    if req_type == "book_content":
+        book_data = db.get_book_content(req["id"])
+        if book_data is None:
+            res["status"] = False
+            res["log"] = f'Book id {req["id"]} not found'
+        else:
+            res["data"], res["ext"] = book_data
+            res["data"] = base64.b64encode(res["data"]).decode()
+            res["log"] = f'Book id {req["id"]} found, extension: {res["ext"]}'
+            res["status"] = True
     commute.send(conn, res)
