@@ -22,7 +22,7 @@ def login_gui():
     p_frame = tk.Frame(gui)
     p_label = tk.Label(p_frame, text="Password:")
     p_label.pack(side=tk.LEFT)
-    p = tk.Entry(p_frame)
+    p = tk.Entry(p_frame, show="*")
     p.pack(side=tk.RIGHT)
     p_frame.pack()
     # button frame
