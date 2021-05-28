@@ -1,4 +1,5 @@
 import json
+import os
 import socket
 import xml.dom.minidom as minidom
 from tkinter import messagebox
@@ -12,6 +13,8 @@ conn = None
 
 
 def create_connection():
+    if not os.path.isfile("config.xml"):
+        raise Exception("You should configure the server address first")
     doc = minidom.parse("config.xml")
     addr = doc.getElementsByTagName("address")[0].attributes["value"].value
     port = doc.getElementsByTagName("port")[0].attributes["value"].value
