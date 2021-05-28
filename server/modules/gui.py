@@ -6,8 +6,6 @@ from tkinter import messagebox
 import modules.commute as commute
 import modules.execute as execute
 
-CLIENT_CONNECTION_MAX = 0
-CLIENT_CONNECTION = 0
 
 conn_cnt = None
 l_btn = None
@@ -15,8 +13,7 @@ log = None
 
 
 def create_connection(conn, addr):
-    global CLIENT_CONNECTION
-    CLIENT_CONNECTION += 1
+    commute.CLIENT_CONNECTION += 1
     print(f"{addr} has connected")
     commute.log_push(f"+++ {addr} has connected +++")
     commute.add_client(addr, conn)
@@ -32,7 +29,6 @@ def create_connection(conn, addr):
                 break
     finally:
         commute.disconnect(addr, conn)
-        CLIENT_CONNECTION -= 1
 
 
 def close_server(server):
@@ -46,10 +42,10 @@ def close_server(server):
 
 
 def start_server():
-    global CLIENT_CONNECTION, CLIENT_CONNECTION_MAX, l_btn
+    global l_btn
     try:
-        CLIENT_CONNECTION_MAX = int(conn_cnt.get())
-        CLIENT_CONNECTION = 0
+        commute.CLIENT_CONNECTION_MAX = int(conn_cnt.get())
+        commute.CLIENT_CONNECTION = 0
     except Exception as e:
         print(e)
         messagebox.showerror("Server error", "Max connection is invalid")
@@ -62,7 +58,7 @@ def start_server():
     l_btn["text"] = "Close"
     l_btn.config(command=lambda: close_server(server))
     while server:
-        if CLIENT_CONNECTION == CLIENT_CONNECTION_MAX:
+        if commute.CLIENT_CONNECTION == commute.CLIENT_CONNECTION_MAX:
             continue
         try:
             conn, addr = server.accept()

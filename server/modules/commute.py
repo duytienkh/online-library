@@ -1,6 +1,9 @@
 import json
 import tkinter as tk
 
+CLIENT_CONNECTION = 0
+CLIENT_CONNECTION_MAX = 0
+
 log = None
 clients = {}
 
@@ -26,11 +29,14 @@ def log_push(msg):
 
 
 def disconnect(addr, conn):
-    conn.close()
-    print(f"{addr} has disconnected")
-    log_push(f"--- {addr} has disconnected ---")
+    global CLIENT_CONNECTION
     client_key = addr[0] + " " + str(addr[1])
-    clients.pop(client_key)
+    if client_key in clients:
+        clients.pop(client_key)
+        conn.close()
+        print(f"{addr} has disconnected")
+        log_push(f"--- {addr} has disconnected ---")
+        CLIENT_CONNECTION -= 1
 
 
 def disconnect_all():
