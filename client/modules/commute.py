@@ -28,6 +28,7 @@ def connect(addr, port=55555):
     try:
         print("Try to connect...")
         sk = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sk.settimeout(5)  # time out 5 seconds
         sk.connect((addr, port))
         conn = sk
     except Exception as e:
