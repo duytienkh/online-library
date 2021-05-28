@@ -67,11 +67,12 @@ def start_server():
     l_btn["text"] = "Close"
     l_btn.config(command=lambda: close_server(server))
     while server and not server.is_None:
-        if commute.CLIENT_CONNECTION == commute.CLIENT_CONNECTION_MAX:
-            continue
         conn = None
         try:
             conn, addr = server.accept()
+            if commute.CLIENT_CONNECTION == commute.CLIENT_CONNECTION_MAX:
+                commute.log_push(f"### Rejected {addr} because of enough connections")
+                raise Exception("Enough connections")
             threading.Thread(target=create_connection, args=(conn, addr), daemon=True).start()
         except Exception:
             if conn is not None:
