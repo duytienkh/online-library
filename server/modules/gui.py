@@ -7,6 +7,13 @@ import modules.commute as commute
 import modules.execute as execute
 
 
+class customSocket(socket.socket):
+    is_None = False
+
+    def set_to_none(self):
+        self.is_None = True
+
+
 conn_cnt = None
 l_btn = None
 log = None
@@ -35,7 +42,7 @@ def close_server(server):
     global l_btn
     commute.disconnect_all()
     server.close()
-    server = None
+    server.set_to_none()
     l_btn["text"] = "Launch"
     l_btn.config(command=lambda: threading.Thread(target=start_server, args=(), daemon=True).start())
     commute.log_push("=== Server has been closed ===")
@@ -46,18 +53,20 @@ def start_server():
     try:
         commute.CLIENT_CONNECTION_MAX = int(conn_cnt.get())
         commute.CLIENT_CONNECTION = 0
+        if commute.CLIENT_CONNECTION_MAX <= 0:
+            raise Exception("CONNECTION_MAX should larger than 0")
     except Exception as e:
         print(e)
         messagebox.showerror("Server error", "Max connection is invalid")
         raise RuntimeError
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server = customSocket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(("0.0.0.0", 55555))
     server.listen()
     commute.log_push("=== Server is listening on port 55555 ===")
     # change launch button to close
     l_btn["text"] = "Close"
     l_btn.config(command=lambda: close_server(server))
-    while server:
+    while server and not server.is_None:
         if commute.CLIENT_CONNECTION == commute.CLIENT_CONNECTION_MAX:
             continue
         conn = None
