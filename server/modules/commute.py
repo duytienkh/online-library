@@ -34,8 +34,8 @@ def disconnect(addr, conn):
 
 
 def disconnect_all():
-    for key in clients:
-        c = clients[key]
+    cur_clients = [c for _, c in clients.items()]
+    for c in cur_clients:
         disconnect(c["addr"], c["conn"])
 
 
