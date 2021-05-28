@@ -15,6 +15,7 @@ log = None
 def create_connection(conn, addr):
     print(f"{addr} has connected")
     commute.log_push(f"+++ {addr} has connected +++")
+    commute.add_client(addr, conn)
     try:
         while True:
             try:

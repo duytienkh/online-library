@@ -2,10 +2,25 @@ import json
 import tkinter as tk
 
 log = None
+clients = {}
+
+
+def client_name_update(conn, name):
+    addr = conn.getpeername()
+    clients[addr[0] + " " + str(addr[1])]["name"] = name
+
+
+def add_client(addr, conn):
+    client_key = addr[0] + " " + str(addr[1])
+    clients[client_key] = {
+        "name": "(" + addr[0] + ", " + str(addr[1]) + ")",
+        "conn": conn
+    }
+    print(clients)
 
 
 def set_log(log_value):
-    global addr, log
+    global log
     log = log_value
     # addr = addr_value
 
@@ -21,9 +36,10 @@ def log_update(f):
 
     def wrapper(*args, **kw):
         package = f(*args, **kw)
-        c_ip = args[0].getpeername()[0]
+        addr = args[0].getpeername()
+        c_name = clients[addr[0] + " " + str(addr[1])]["name"]
         direct = " <-- " if f.__name__ == "send" else " --> "
-        log_push(c_ip + direct + package["log"])
+        log_push(c_name + direct + package["log"])
         return package
 
     return wrapper
