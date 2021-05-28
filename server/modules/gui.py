@@ -60,11 +60,13 @@ def start_server():
     while server:
         if commute.CLIENT_CONNECTION == commute.CLIENT_CONNECTION_MAX:
             continue
+        conn = None
         try:
             conn, addr = server.accept()
             threading.Thread(target=create_connection, args=(conn, addr), daemon=True).start()
         except Exception:
-            conn.close()
+            if conn is not None:
+                conn.close()
 
 
 def build():
