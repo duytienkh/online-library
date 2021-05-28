@@ -37,6 +37,7 @@ def create_connection(conn, addr):
 
 def close_server(server):
     global l_btn
+    commute.disconnect_all()
     server.close()
     server = None
     l_btn["text"] = "Launch"
@@ -94,6 +95,7 @@ def build():
     cnt_lb = tk.Label(cnt_f, text="Max connection", font=("Consolas", 12))
     cnt_lb.pack()
     cnt_ent = tk.Entry(cnt_f)
+    cnt_ent.insert(tk.END, 2)
     cnt_ent.pack()
     conn_cnt = cnt_ent
     cnt_f.pack(side=tk.LEFT)
