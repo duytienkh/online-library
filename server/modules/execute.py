@@ -33,7 +33,11 @@ def execute(conn, req):
                 res["log"] = "account created"
     if req_type == "sign_in":
         res["status"] = db.check_user_password(req["username"], req["password"])
-        res["log"] = "logged in"
+        if res["status"]:
+            res["log"] = "signed in"
+            commute.client_name_update(conn, req["username"])
+        else:
+            res["log"] = "couldnt sign in"
     if req_type == "find":
         content = req["content"]
         option = TO_KWARGS.get(req["option"])

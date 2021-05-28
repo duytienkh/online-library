@@ -12,17 +12,15 @@ conn = None
 
 
 def create_connection():
-    if not conn:
-        doc = minidom.parse("config.xml")
-        addr = doc.getElementsByTagName("address")[0].attributes["value"].value
-        port = doc.getElementsByTagName("port")[0].attributes["value"].value
-        s = connect(addr, int(port))
-        if s:
-            print("Connect successfully")
-        else:
-            print("Cant connect to server")
+    doc = minidom.parse("config.xml")
+    addr = doc.getElementsByTagName("address")[0].attributes["value"].value
+    port = doc.getElementsByTagName("port")[0].attributes["value"].value
+    s = connect(addr, int(port))
+    if s:
+        print("Connect successfully")
         return s
-    return True
+    print("Cant connect to server")
+    return False
 
 
 def connect(addr, port=55555):

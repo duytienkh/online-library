@@ -1,13 +1,25 @@
 import json
 import tkinter as tk
 
+CLIENT_CONNECTION = 0
+CLIENT_CONNECTION_MAX = 0
+
 log = None
+clients = {}
 
 
-def set_log(log_value):
-    global addr, log
-    log = log_value
-    # addr = addr_value
+def client_name_update(conn, name):
+    addr = conn.getpeername()
+    clients[addr[0] + " " + str(addr[1])]["name"] = name
+
+
+def add_client(addr, conn):
+    client_key = addr[0] + " " + str(addr[1])
+    clients[client_key] = {
+        "name": "(" + addr[0] + ", " + str(addr[1]) + ")",
+        "conn": conn,
+        "addr": addr,
+    }
 
 
 def log_push(msg):
@@ -16,14 +28,38 @@ def log_push(msg):
     log["state"] = tk.DISABLED
 
 
+def disconnect(addr, conn):
+    global CLIENT_CONNECTION
+    client_key = addr[0] + " " + str(addr[1])
+    if client_key in clients:
+        clients.pop(client_key)
+        conn.close()
+        print(f"{addr} has disconnected")
+        log_push(f"--- {addr} has disconnected ---")
+        CLIENT_CONNECTION -= 1
+
+
+def disconnect_all():
+    cur_clients = [c for _, c in clients.items()]
+    for c in cur_clients:
+        disconnect(c["addr"], c["conn"])
+
+
+def set_log(log_value):
+    global log
+    log = log_value
+    # addr = addr_value
+
+
 def log_update(f):
     global log
 
     def wrapper(*args, **kw):
         package = f(*args, **kw)
-        c_ip = args[0].getpeername()[0]
+        addr = args[0].getpeername()
+        c_name = clients[addr[0] + " " + str(addr[1])]["name"]
         direct = " <-- " if f.__name__ == "send" else " --> "
-        log_push(c_ip + direct + package["log"])
+        log_push(c_name + direct + package["log"])
         return package
 
     return wrapper
