@@ -14,21 +14,35 @@ def add_client(addr, conn):
     client_key = addr[0] + " " + str(addr[1])
     clients[client_key] = {
         "name": "(" + addr[0] + ", " + str(addr[1]) + ")",
-        "conn": conn
+        "conn": conn,
+        "addr": addr,
     }
-    print(clients)
-
-
-def set_log(log_value):
-    global log
-    log = log_value
-    # addr = addr_value
 
 
 def log_push(msg):
     log["state"] = tk.NORMAL
     log.insert("0.0", "\n" + msg)
     log["state"] = tk.DISABLED
+
+
+def disconnect(addr, conn):
+    conn.close()
+    print(f"{addr} has disconnected")
+    log_push(f"--- {addr} has disconnected ---")
+    client_key = addr[0] + " " + str(addr[1])
+    clients.pop(client_key)
+
+
+def disconnect_all():
+    for key in clients:
+        c = clients[key]
+        disconnect(c["addr"], c["conn"])
+
+
+def set_log(log_value):
+    global log
+    log = log_value
+    # addr = addr_value
 
 
 def log_update(f):

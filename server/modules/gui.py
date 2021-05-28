@@ -6,6 +6,8 @@ from tkinter import messagebox
 import modules.commute as commute
 import modules.execute as execute
 
+CLIENT_CONNECTION_MAX = 0
+CLIENT_CONNECTION = 0
 
 conn_cnt = None
 l_btn = None
@@ -13,6 +15,8 @@ log = None
 
 
 def create_connection(conn, addr):
+    global CLIENT_CONNECTION
+    CLIENT_CONNECTION += 1
     print(f"{addr} has connected")
     commute.log_push(f"+++ {addr} has connected +++")
     commute.add_client(addr, conn)
@@ -27,9 +31,8 @@ def create_connection(conn, addr):
                 print("Error:", e)
                 break
     finally:
-        conn.close()
-        print(f"{addr} has disconnected")
-        commute.log_push(f"--- {addr} has disconnected ---")
+        commute.disconnect(addr, conn)
+        CLIENT_CONNECTION -= 1
 
 
 def close_server(server):
@@ -42,9 +45,10 @@ def close_server(server):
 
 
 def start_server():
-    global l_btn
+    global CLIENT_CONNECTION, CLIENT_CONNECTION_MAX, l_btn
     try:
         CLIENT_CONNECTION_MAX = int(conn_cnt.get())
+        CLIENT_CONNECTION = 0
     except Exception as e:
         print(e)
         messagebox.showerror("Server error", "Max connection is invalid")
@@ -52,7 +56,6 @@ def start_server():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind(("0.0.0.0", 55555))
     server.listen()
-    CLIENT_CONNECTION = 0
     commute.log_push("=== Server is listening on port 55555 ===")
     # change launch button to close
     l_btn["text"] = "Close"
@@ -62,11 +65,9 @@ def start_server():
             continue
         try:
             conn, addr = server.accept()
-            CLIENT_CONNECTION += 1
             threading.Thread(target=create_connection, args=(conn, addr), daemon=True).start()
         except Exception:
             conn.close()
-            CLIENT_CONNECTION -= 1
 
 
 def build():
@@ -98,6 +99,7 @@ def build():
     cnt_f.pack(side=tk.LEFT)
     dc_btn = tk.Button(l_f, text="Disconnect all", width=15, height=2, background="white", font=("Consolas", 15))
     dc_btn.pack(side=tk.LEFT, padx=20)
+    dc_btn.config(command=lambda: threading.Thread(target=commute.disconnect_all(), args=(), daemon=True).start())
     l_f.pack(pady=10)
 
     log = tk.Text(gui, font=("Consolas", 10), state=tk.DISABLED)
