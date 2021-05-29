@@ -48,6 +48,9 @@ def close_server(server):
     commute.log_push("=== Server has been closed ===")
 
 
+SERVER_PORT = 55555
+
+
 def start_server():
     global l_btn
     try:
@@ -60,9 +63,16 @@ def start_server():
         messagebox.showerror("Server error", "Max connection is invalid")
         raise RuntimeError
     server = customSocket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("0.0.0.0", 55555))
+    global SERVER_PORT
+    while True:
+        try:
+            server.bind(("0.0.0.0", SERVER_PORT))
+        except Exception:
+            SERVER_PORT += 1
+        else:
+            break
     server.listen()
-    commute.log_push("=== Server is listening on port 55555 ===")
+    commute.log_push(f"=== Server is listening on port {SERVER_PORT} ===")
     # change launch button to close
     l_btn["text"] = "Close"
     l_btn.config(command=lambda: close_server(server))
