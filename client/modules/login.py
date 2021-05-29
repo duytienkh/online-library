@@ -62,7 +62,7 @@ def sign_in(gui, u, p):
         "password": p.get(),
         "log": "Sign in"
     }
-    resp = commute.send_n_recv(req)
+    resp = commute.send_n_recv(req, True)
     if resp:
         if resp["status"] is True:
             gui.destroy()
@@ -80,7 +80,7 @@ def sign_up(u, p):
         "password": p.get(),
         "log": "Sign up"
     }
-    resp = commute.send_n_recv(req)
+    resp = commute.send_n_recv(req, True)
     if resp:
         if resp["status"] is True:
             messagebox.showinfo("", "Successfully")
