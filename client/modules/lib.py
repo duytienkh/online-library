@@ -40,8 +40,18 @@ def lib_gui():
     book_list.bind('<<TreeviewSelect>>', item_selected)
 
     f_btn.config(command=lambda: find(book_list, f_content, options))
+    dcn_btn = tk.Button(gui, text="Disconnect", command=lambda: disconnect())
+    dcn_btn.pack(side=tk.LEFT)
 
     gui.mainloop()
+
+
+def disconnect():
+    req = {
+        "type": "disconnect",
+        "log": "Send disconnect signal"
+    }
+    commute.send(req)
 
 
 def find(book_list, content, option):
