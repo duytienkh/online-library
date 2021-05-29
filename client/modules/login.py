@@ -60,7 +60,7 @@ def sign_in(gui, u, p):
         "type": "sign_in",
         "username": u.get(),
         "password": p.get(),
-        "log": "sign in"
+        "log": "Sign in"
     }
     resp = commute.send_n_recv(req)
     if resp:
@@ -78,7 +78,7 @@ def sign_up(u, p):
         "type": "sign_up",
         "username": u.get(),
         "password": p.get(),
-        "log": "sign up"
+        "log": "Sign up"
     }
     resp = commute.send_n_recv(req)
     if resp:

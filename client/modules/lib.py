@@ -49,7 +49,7 @@ def find(book_list, content, option):
         "type": "find",
         "content": content.get(),
         "option": option.get(),
-        "log": "find book"
+        "log": "Find books"
     }
     book_list.delete(*book_list.get_children())
     books = commute.send_n_recv(req)
