@@ -23,21 +23,21 @@ def execute(conn, req):
         if db.check_user_exists(req["username"]) is True:
             res["status"] = False
             res["data"] = "username already existed"
-            res["log"] = "username was existed"
+            res["log"] = "Username was existed"
         else:
             res["status"] = db.create_account(req["username"], req["password"])
             res["data"] = "create unsuccessfully"
-            res["log"] = "create unsuccessfully"
+            res["log"] = "Error occurs when creating new account"
             if res["status"]:
                 res["data"] = "create successfully"
-                res["log"] = "account created"
+                res["log"] = "A new account was created"
     if req_type == "sign_in":
         res["status"] = db.check_user_password(req["username"], req["password"])
         if res["status"]:
-            res["log"] = "signed in"
+            res["log"] = "[" + req["username"] + "]" + " was signed in"
             commute.client_name_update(conn, req["username"])
         else:
-            res["log"] = "couldnt sign in"
+            res["log"] = "Wrong username/password"
     if req_type == "find":
         content = req["content"]
         option = TO_KWARGS.get(req["option"])
@@ -50,15 +50,15 @@ def execute(conn, req):
             books = db.look_up_books(**kwargs)
         res["status"] = True
         res["data"] = books
-        res["log"] = f"books result was sent, found {len(books)} result"
+        res["log"] = f"Books result was sent ({len(books)} books)"
     if req_type == "book_content":
         book_data = db.get_book_content(req["id"])
         if book_data is None:
             res["status"] = False
-            res["log"] = f'Book id {req["id"]} not found'
+            res["log"] = f'Book (id: {req["id"]}) not found'
         else:
             res["data"], res["ext"] = book_data
             res["data"] = base64.b64encode(res["data"]).decode()
-            res["log"] = f'Book id {req["id"]} found, extension: {res["ext"]}'
+            res["log"] = f'Book (id: {req["id"]}) found, extension: {res["ext"]}'
             res["status"] = True
     commute.send(conn, res)

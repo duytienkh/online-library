@@ -10,7 +10,7 @@ def get_book_content(id):
     req = {
         "type": "book_content",
         "id": id,
-        "log": "get book content"
+        "log": "Get book's content"
     }
 
     return commute.send_n_recv(req)
