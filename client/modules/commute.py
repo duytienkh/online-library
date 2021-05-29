@@ -61,10 +61,13 @@ def send(package):
     req_size = json.dumps(req_size).encode()
     while len(req_size) < 128:
         req_size += b" "
-    print(len(req_size))
-    conn.sendall(req_size)  # send req size
-    print(package)
-    conn.sendall(req)  # send req
+    try:
+        print(len(req_size))
+        conn.sendall(req_size)  # send req size
+        print(package)
+        conn.sendall(req)  # send req
+    except Exception as e:
+        messagebox.showerror("Disconnected", "Cannot connect to server. \n" + str(e))
 
 
 def safe_recv(conn, size):
@@ -100,12 +103,13 @@ def recv():
     return resp
 
 
-def send_n_recv(package):
+def send_n_recv(package, auto_reconnect=False):
     global conn
     try:
         send(package)
         return recv()
     except Exception as e:
         messagebox.showerror("Disconnected", "Cannot connect to server. \n" + str(e))
-        conn = None
+        if auto_reconnect:
+            conn = None
     return None

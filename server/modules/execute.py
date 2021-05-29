@@ -61,4 +61,7 @@ def execute(conn, req):
             res["data"] = base64.b64encode(res["data"]).decode()
             res["log"] = f'Book (id: {req["id"]}) found, extension: {res["ext"]}'
             res["status"] = True
+    if req_type == "disconnect":
+        commute.disconnect(conn.getpeername(), conn)
+        res["log"] = "Disconnected"
     commute.send(conn, res)
