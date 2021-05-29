@@ -26,7 +26,7 @@ def create_connection():
     return False
 
 
-def connect(addr, port=55555):
+def connect(addr, port):
     global conn
     try:
         print("Try to connect...")
@@ -36,6 +36,7 @@ def connect(addr, port=55555):
         conn = sk
     except Exception as e:
         print(e)
+        conn = None
         return False
     return True
 
@@ -100,9 +101,11 @@ def recv():
 
 
 def send_n_recv(package):
+    global conn
     try:
         send(package)
         return recv()
     except Exception as e:
         messagebox.showerror("Disconnected", "Cannot connect to server. \n" + str(e))
+        conn = None
     return None
