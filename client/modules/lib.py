@@ -1,11 +1,12 @@
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import ttk
 
 import modules.commute as commute
 import modules.reader as reader
 
 
-def lib_gui():
+def lib_gui(login_gui):
     gui = tk.Tk()
     gui.title("Online Library")
     # finding frame
@@ -40,18 +41,21 @@ def lib_gui():
     book_list.bind('<<TreeviewSelect>>', item_selected)
 
     f_btn.config(command=lambda: find(book_list, f_content, options))
-    dcn_btn = tk.Button(gui, text="Disconnect", command=lambda: disconnect())
+    dcn_btn = tk.Button(gui, text="Disconnect", command=lambda: disconnect(login_gui, gui))
     dcn_btn.pack(side=tk.LEFT)
 
     gui.mainloop()
 
 
-def disconnect():
-    req = {
-        "type": "disconnect",
-        "log": "Send disconnect signal"
-    }
-    commute.send(req)
+def disconnect(login_gui, lib_gui):
+    if messagebox.askyesno("Are you sure?", "You must login again to reconnect to the server"):
+        req = {
+            "type": "disconnect",
+            "log": "Send disconnect signal"
+        }
+        commute.send(req)
+        lib_gui.destroy()
+        login_gui.deiconify()
 
 
 def find(book_list, content, option):

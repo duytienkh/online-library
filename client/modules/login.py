@@ -65,8 +65,8 @@ def sign_in(gui, u, p):
     resp = commute.send_n_recv(req, True)
     if resp:
         if resp["status"] is True:
-            gui.destroy()
-            lib.lib_gui()
+            gui.withdraw()
+            lib.lib_gui(gui)
         else:
             commute.disconnect()
             messagebox.showerror("", "Username/password was incorrect")
