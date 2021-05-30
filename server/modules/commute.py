@@ -24,7 +24,7 @@ def add_client(addr, conn):
 
 def log_push(msg):
     log["state"] = tk.NORMAL
-    log.insert("0.0", "\n" + msg)
+    log.insert("0.0", msg + "\n")
     log["state"] = tk.DISABLED
 
 
