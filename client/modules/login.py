@@ -68,7 +68,10 @@ def sign_in(gui, u, p):
             gui.destroy()
             lib.lib_gui()
         else:
+            commute.disconnect()
             messagebox.showerror("", "Username/password was incorrect")
+    else:
+        commute.disconnect()
 
 
 def sign_up(u, p):
@@ -81,6 +84,7 @@ def sign_up(u, p):
         "log": "Sign up"
     }
     resp = commute.send_n_recv(req, True)
+    commute.disconnect()
     if resp:
         if resp["status"] is True:
             messagebox.showinfo("", "Successfully")
