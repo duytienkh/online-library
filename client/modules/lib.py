@@ -44,6 +44,11 @@ def lib_gui(login_gui):
     dcn_btn = tk.Button(gui, text="Disconnect", command=lambda: disconnect(login_gui, gui))
     dcn_btn.pack(side=tk.LEFT)
 
+    def on_closing():
+        commute.disconnect()
+        gui.destroy()
+        login_gui.destroy()
+    gui.protocol("WM_DELETE_WINDOW", on_closing)
     gui.mainloop()
 
 
@@ -54,6 +59,7 @@ def disconnect(login_gui, lib_gui):
             "log": "Send disconnect signal"
         }
         commute.send(req)
+        commute.disconnect()
         lib_gui.destroy()
         login_gui.deiconify()
 
