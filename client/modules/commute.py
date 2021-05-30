@@ -66,8 +66,10 @@ def send(package):
         conn.sendall(req_size)  # send req size
         print(package)
         conn.sendall(req)  # send req
+        return True
     except Exception as e:
         messagebox.showerror("Disconnected", "Cannot connect to server. \n" + str(e))
+        return False
 
 
 def safe_recv(conn, size):
@@ -106,8 +108,11 @@ def recv():
 def send_n_recv(package, auto_reconnect=False):
     global conn
     try:
-        send(package)
-        return recv()
+        if send(package):
+            return recv()
+        else:
+            if auto_reconnect:
+                conn = None
     except Exception as e:
         messagebox.showerror("Disconnected", "Cannot connect to server. \n" + str(e))
         if auto_reconnect:
