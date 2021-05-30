@@ -22,14 +22,16 @@ def read(id):
         return
     gui = tk.Tk()
     gui.title("Book reader")
-    content = tk.Text(gui)
+    scrollbar = tk.Scrollbar(gui)
+    scrollbar.pack(side=tk.RIGHT, fill='y')
+    content = tk.Text(gui, yscrollcommand=scrollbar.set)
     if book["status"] is False:
         content.insert(tk.INSERT, book["log"])
     elif book["ext"] != "txt":
         content.insert(tk.INSERT, f'Cannot read book with {book["ext"]} extension.')
     else:
         content.insert(tk.INSERT, base64.b64decode(book["data"]).decode())
-    content.pack()
+    content.pack(padx=10, pady=10)
     gui.mainloop()
 
 

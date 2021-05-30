@@ -21,13 +21,17 @@ def lib_gui(login_gui):
     f_btn.pack(side=tk.LEFT)
     f_frame.pack()
     # result frame
-    book_list = ttk.Treeview(gui, columns=(1, 2, 3, 4, 5), show="headings")
+    r_frame = tk.Frame(gui)
+    book_list_sb = tk.Scrollbar(r_frame)
+    book_list_sb.pack(side=tk.RIGHT, fill='y')
+    book_list = ttk.Treeview(r_frame, columns=(1, 2, 3, 4, 5), show="headings", yscrollcommand=book_list_sb.set)
     config_colum = [('ID', 10), ('Name', 250), ('Type', 90), ('Author', 110), ('Year', 50)]
     for num, col in enumerate(config_colum):
         name, width = col
         book_list.heading(num + 1, text=name)
         book_list.column(num + 1, width=width)
     book_list.pack()
+    r_frame.pack(pady=10, padx=20)
     # book info
     info_frame = tk.Frame(gui)
     info_frame.pack()

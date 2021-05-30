@@ -122,7 +122,11 @@ def build():
     dc_btn.config(command=lambda: threading.Thread(target=commute.disconnect_all(), args=(), daemon=True).start())
     l_f.pack(pady=10)
 
-    log = tk.Text(gui, font=("Consolas", 10), state=tk.DISABLED)
+    actual_log_frame = tk.Frame(gui)
+    log_sb = tk.Scrollbar(actual_log_frame)
+    log_sb.pack(side=tk.RIGHT, fill='y')
+    log = tk.Text(actual_log_frame, font=("Consolas", 10), state=tk.DISABLED, yscrollcommand=log_sb.set)
     commute.set_log(log)
-    log.pack(pady=10)
+    log.pack()
+    actual_log_frame.pack(pady=20, padx=20)
     gui.mainloop()
